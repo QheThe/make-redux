@@ -1,7 +1,7 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
+// import React from 'react';
+// import ReactDOM from 'react-dom';
+// import './index.css';
+// import App from './App';
 import * as serviceWorker from './serviceWorker';
 
 // ReactDOM.render(<App />, document.getElementById('root'));
@@ -22,6 +22,20 @@ const appState = {
     } 
 }
 
+function dispatch (action) {
+	switch(action.type) {
+		case 'UPDATE_TITLE_TEXT':
+			appState.title.text = action.text
+			break
+		case 'UPDATE_TITLE_COLOR':
+			appState.title.color = action.color
+			break
+		default:
+			break
+
+	}
+}
+
 function renderApp (appState) {
     renderTitle(appState.title)
     renderContent(appState.content)
@@ -38,6 +52,9 @@ function renderContent (content) {
     contentDOM.innerHTML = content.text
     contentDOM.style.color = content.color
 }
-
+ 
 
 renderApp(appState)
+
+// 更新标题文字
+dispatch({ type: 'UPDATE_TITLE_TEXT', text: '更新标题文字'})
