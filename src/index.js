@@ -1,3 +1,5 @@
+// 更新流程: dispatch 触发 stateChanger 拷贝原 state 对象结构覆盖原有属性 将更新后的对象返回 触发 subscribe 对比 state 对象是否有变化 有更新 无则不更新
+
 function createStore(state, stateChanger) {
     const listeners = []
     const subscribe = (listener) => listeners.push(listener)
@@ -68,8 +70,12 @@ function stateChanger(state, action) {
 
 const store = createStore(appState, stateChanger)
 let oldState = store.getState() // 缓存旧的 state
+
+// 修改完成后的回调
 store.subscribe(() => {
+    console.log('旧', oldState)
     const newState = store.getState() // 数据可能变化，获取新的 state
+    console.log('新', newState)
     renderApp(newState, oldState) // 把新旧的 state 传进去渲染
     oldState = newState // 渲染完以后，新的 newState 变成了旧的 oldState，等待下一次数据变化重新渲染
 })
