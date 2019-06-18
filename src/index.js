@@ -3,13 +3,14 @@
 // import './index.css';
 // import App from './App';
 import * as serviceWorker from './serviceWorker';
-
+import feux from './feux'
 // ReactDOM.render(<App />, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister();
+
 
 const appState = {
     title: {
@@ -22,7 +23,7 @@ const appState = {
     }
 }
 
-function dispatch(action) {
+function mutations(state, action) {
     switch (action.type) {
         case 'UPDATE_TITLE_TEXT':
             appState.title.text = action.text
@@ -53,9 +54,15 @@ function renderContent(content) {
     contentDOM.style.color = content.color
 }
 
-renderApp(appState) // 首次渲染页面
+const store = feux.createStore(appState, mutations)
 
-dispatch({ type: 'UPDATE_TITLE_TEXT', text: '《React.js 小书》' }) // 修改标题文本
-dispatch({ type: 'UPDATE_TITLE_COLOR', color: 'blue' }) // 修改标题颜色
+store.subscribe(function () {
+    renderApp(store.getState())
+})
 
-renderApp(appState) // 把新的数据渲染到页面上
+// renderApp(store.getState()) // 首次渲染页面
+
+store.dispatch({ type: 'UPDATE_TITLE_TEXT', text: '《React.js 小书》' }) // 修改标题文本
+store.dispatch({ type: 'UPDATE_TITLE_COLOR', color: 'blue' }) // 修改标题颜色
+
+// renderApp(store.getState()) // 把新的数据渲染到页面上
