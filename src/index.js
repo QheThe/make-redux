@@ -1,14 +1,20 @@
-// 更新流程: dispatch 触发 stateChanger 拷贝原 state 对象结构覆盖原有属性 将更新后的对象返回 触发 subscribe 对比 state 对象是否有变化 有更新 无则不更新
+// 更新流程: dispatch 触发 reducer 拷贝原 state 对象结构覆盖原有属性 将更新后的对象返回 触发 subscribe 对比 state 对象是否有变化 有更新 无则不更新
 
-function createStore(state, stateChanger) {
+function createStore(reducer) {
+    let state = null
     const listeners = []
     const subscribe = (listener) => listeners.push(listener)
     const getState = () => state
     const dispatch = (action) => {
-        state = stateChanger(state, action) // 覆盖原对象
+        state = reducer(state, action)
         listeners.forEach((listener) => listener())
     }
-    return { getState, dispatch, subscribe }
+    dispatch({}) // 初始化 state
+    return {
+        getState,
+        dispatch,
+        subscribe
+    }
 }
 
 function renderApp(newAppState, oldAppState = {}) { // 防止 oldAppState 没有传入，所以加了默认参数 oldAppState = {}
@@ -34,18 +40,31 @@ function renderContent(newContent, oldContent = {}) {
     contentDOM.style.color = newContent.color
 }
 
-let appState = {
-    title: {
-        text: 'React.js 小书',
-        color: 'red',
-    },
-    content: {
-        text: 'React.js 小书内容',
-        color: 'blue'
-    }
-}
+// let appState = {
+//     title: {
+//         text: 'React.js 小书',
+//         color: 'red',
+//     },
+//     content: {
+//         text: 'React.js 小书内容',
+//         color: 'blue'
+//     }
+// }
 
-function stateChanger(state, action) {
+function reducer(state, action) {
+    if(!state) {
+        return {
+            title: {
+                text: 'React.js 小书',
+                color: 'red',
+            },
+            content: {
+                text: 'React.js 小书内容',
+                color: 'blue'
+            }
+        }
+    }
+
     switch (action.type) {
         case 'UPDATE_TITLE_TEXT':
             return { // 构建新的对象并且返回
@@ -68,7 +87,7 @@ function stateChanger(state, action) {
     }
 }
 
-const store = createStore(appState, stateChanger)
+const store = createStore(reducer)
 let oldState = store.getState() // 缓存旧的 state
 
 // 修改完成后的回调
