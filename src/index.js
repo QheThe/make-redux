@@ -1,21 +1,30 @@
+import feux from './fuex'
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+import App from './App';
+import * as serviceWorker from './serviceWorker';
+
+ReactDOM.render(<App />, document.getElementById('root'));
+serviceWorker.unregister();
 // 更新流程: dispatch 触发 reducer 拷贝原 state 对象结构覆盖原有属性 将更新后的对象返回 触发 subscribe 对比 state 对象是否有变化 有更新 无则不更新
 
-function createStore(reducer) {
-    let state = null
-    const listeners = []
-    const subscribe = (listener) => listeners.push(listener)
-    const getState = () => state
-    const dispatch = (action) => {
-        state = reducer(state, action)
-        listeners.forEach((listener) => listener())
-    }
-    dispatch({}) // 初始化 state
-    return {
-        getState,
-        dispatch,
-        subscribe
-    }
-}
+// function createStore(reducer) {
+//     let state = null
+//     const listeners = []
+//     const subscribe = (listener) => listeners.push(listener)
+//     const getState = () => state
+//     const dispatch = (action) => {
+//         state = reducer(state, action)
+//         listeners.forEach((listener) => listener())
+//     }
+//     dispatch({}) // 初始化 state
+//     return {
+//         getState,
+//         dispatch,
+//         subscribe
+//     }
+// }
 
 function renderApp(newAppState, oldAppState = {}) { // 防止 oldAppState 没有传入，所以加了默认参数 oldAppState = {}
     if (newAppState === oldAppState) return // 数据没有变化就不渲染了
@@ -87,7 +96,7 @@ function reducer(state, action) {
     }
 }
 
-const store = createStore(reducer)
+const store = feux.createStore(reducer)
 let oldState = store.getState() // 缓存旧的 state
 
 // 修改完成后的回调
