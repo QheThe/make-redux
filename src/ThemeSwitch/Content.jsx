@@ -12,7 +12,9 @@ class Content extends Component {
     }
 
     componentDidMount () {
+        const { store } = this.context
         this._updateThemeColor()
+        store.subscribe(() => { this._updateThemeColor() })
     }
 
     _updateThemeColor () {
