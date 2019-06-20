@@ -1,6 +1,6 @@
 import React from 'react';
 import logo from './logo.svg';
-import ThemeSwitch from './ThemeSwitch/index'
+import Theme from './ThemeSwitch/Theme'
 import './App.css';
 
 function App() {
@@ -20,7 +20,7 @@ function App() {
           Learn React
         </a>
       </header> */}
-      <ThemeSwitch />
+      <Theme />
     </div>
   );
 }
